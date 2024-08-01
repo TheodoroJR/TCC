@@ -1,0 +1,1 @@
+alter table epis add dataDeCadastro varchar(10) not null,
