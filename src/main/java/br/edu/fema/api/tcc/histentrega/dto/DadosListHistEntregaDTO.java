@@ -21,4 +21,8 @@ public class DadosListHistEntregaDTO {
     public List<EpiModel> getEpis() {
         return epis;
     }
+
+    public Long getColaboradorId() {
+        return colaborador.getCodigoColaborador();
+    }
 }

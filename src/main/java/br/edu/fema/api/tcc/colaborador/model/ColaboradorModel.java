@@ -8,8 +8,10 @@ import br.edu.fema.api.tcc.epi.model.EpiModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name="colaborador")
@@ -98,9 +100,10 @@ public class ColaboradorModel {
         return cargo;
     }
 
-    public List<EpiModel> getEpis() {
-        return epis;
-    }
+   // public List<EpiModel> getEpis() {
+   //     return epis;
+   // }
+
 
     public Boolean getAtivo() {
         return ativo;
@@ -129,4 +132,15 @@ public class ColaboradorModel {
     public void ativarColaborador() {
         this.ativo = true;
     }
+
+    public List<EpiModel> setListaEpis( ArrayList<EpiModel> es){
+        return this.epis = epis;
+    }
+
+    public List<EpiModel> getEpis() {
+        return epis;
+    }
 }
+
+
+

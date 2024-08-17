@@ -7,18 +7,17 @@ import br.edu.fema.api.tcc.risco.model.RiscoModel;
 import br.edu.fema.api.tcc.risco.repository.RiscoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/riscos")
+@CrossOrigin("http://localhost:4200")
 public class RiscoController {
 
     @Autowired
@@ -35,15 +34,25 @@ public class RiscoController {
         return ResponseEntity.created(uri).body(new DadosListagemRiscoDTO(risco));
     }
 
+    //@GetMapping
+    //public ResponseEntity<Page<DadosListagemRiscoDTO>> listarRiscos(@PageableDefault(size=5) Pageable paginacao){
+    //    var page = riscoRepository.findByAtivoTrue(paginacao).map(DadosListagemRiscoDTO::new);
+    //    return ResponseEntity.ok(page);
+    //}
+
     @GetMapping
-    public ResponseEntity<Page<DadosListagemRiscoDTO>> listarRiscos(@PageableDefault(size=5) Pageable paginacao){
-        var page = riscoRepository.findByAtivoTrue(paginacao).map(DadosListagemRiscoDTO::new);
-        return ResponseEntity.ok(page);
+    public List<RiscoModel> listarRiscos(){
+        return riscoRepository.findByAtivoTrue();
     }
 
-    @PutMapping
+    @GetMapping("{id}")
+    public Optional<RiscoModel> listarRiscosPorId(@PathVariable Long id){
+        return riscoRepository.findById(id);
+    }
+
+    @PutMapping("{id}")
     @Transactional
-    public ResponseEntity atualizarDadosRisco(@RequestBody @Valid AtualizacaoRiscoDTO atualizacaoRiscoDTO){
+    public ResponseEntity atualizarDadosRisco(@PathVariable Long id, @RequestBody @Valid AtualizacaoRiscoDTO atualizacaoRiscoDTO){
         var risco = riscoRepository.getReferenceById(atualizacaoRiscoDTO.getCodigoRisco());
         risco.atualizarDados(atualizacaoRiscoDTO);
         return ResponseEntity.ok(new DadosListagemRiscoDTO(risco));
