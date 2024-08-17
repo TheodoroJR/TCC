@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("epis")
+@CrossOrigin("http://localhost:4200")
 public class EpiController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class EpiController {
 
    @GetMapping
    public List<EpiModel> listarEpi(){
-       return epiRepository.findAll();
+       return epiRepository.findByAtivoTrue();
    }
 
     @GetMapping
