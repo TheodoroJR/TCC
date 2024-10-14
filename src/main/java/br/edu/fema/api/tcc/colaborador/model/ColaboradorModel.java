@@ -16,9 +16,9 @@ import java.util.List;
 
 @Entity(name="colaborador")
 @Table(name = "colaboradores")
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@EqualsAndHashCode(of = "id")
 public class ColaboradorModel {
 
     @Id
@@ -34,15 +34,17 @@ public class ColaboradorModel {
     private List<EpiModel> epis;
     private Boolean ativo;
 
-    public ColaboradorModel(DadosColaboradoresDTO dadosColaboradoresDTO) {
-        this.nomeColaborador = dadosColaboradoresDTO.getNomeColaborador();
-        this.cpf = dadosColaboradoresDTO.getCpf();
-        this.telefone = dadosColaboradoresDTO.getTelefone();
-        this.dataAdmissao = dadosColaboradoresDTO.getDataAdmissao();
-        this.cargo = dadosColaboradoresDTO.getCargo();
-        this.epis = dadosColaboradoresDTO.getEpis();
-        this.ativo = true;
+    public ColaboradorModel() {
     }
+
+  // public ColaboradorModel(DadosColaboradoresDTO dadosColaboradoresDTO) {
+  //     this.nomeColaborador = dadosColaboradoresDTO.getNomeColaborador();
+  //     this.cpf = dadosColaboradoresDTO.getCpf();
+  //     this.telefone = dadosColaboradoresDTO.getTelefone();
+  //     this.dataAdmissao = dadosColaboradoresDTO.getDataAdmissao();
+  //     this.cargo = dadosColaboradoresDTO.getCargo();
+  //     this.ativo = true;
+  // }
 
     public void setCodigoColaborador(Long codigoColaborador) {
         this.codigoColaborador = codigoColaborador;

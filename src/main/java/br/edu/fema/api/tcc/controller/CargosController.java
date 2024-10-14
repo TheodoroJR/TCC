@@ -1,16 +1,19 @@
 package br.edu.fema.api.tcc.controller;
 
 import br.edu.fema.api.tcc.cargos.dto.AtualizarDadosCargos;
-import br.edu.fema.api.tcc.cargos.dto.DadosCargosRecord;
+import br.edu.fema.api.tcc.cargos.dto.DadosCargosDTO;
 import br.edu.fema.api.tcc.cargos.dto.DadosListaCargoDTO;
 import br.edu.fema.api.tcc.cargos.model.CargosModel;
 import br.edu.fema.api.tcc.cargos.repository.CargosRepository;
-import br.edu.fema.api.tcc.colaborador.model.ColaboradorModel;
+import br.edu.fema.api.tcc.risco.model.RiscoModel;
+import br.edu.fema.api.tcc.risco.repository.RiscoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +23,57 @@ import java.util.Optional;
 public class CargosController {
 
     @Autowired
-    private CargosRepository cargosRepository;
+    private final CargosRepository cargosRepository;
+    @Autowired
+    private final RiscoRepository riscoRepository;
 
+    public CargosController(CargosRepository cargosRepository,
+                            RiscoRepository riscoRepository) {
+        this.cargosRepository = cargosRepository;
+        this.riscoRepository = riscoRepository;
+    }
+
+
+//metodo final
     @PostMapping
     @Transactional
-    public void cadastroDeCargo(@RequestBody DadosCargosRecord cargoDTO){
-        cargosRepository.save(new CargosModel(cargoDTO));
-        System.out.println(cargoDTO.toString());
+    public CargosModel salvar(@RequestBody DadosCargosDTO dadosCargosDTO){
+        List<RiscoModel> riscosAssociados = new ArrayList<>();
+
+        for (RiscoModel riscoDTO : dadosCargosDTO.getRiscosCargos()) {
+            RiscoModel risco = riscoRepository.findById(riscoDTO.getCodigoRisco())
+                    .orElseThrow(() -> new EntityNotFoundException("Risco não encontrado"));
+            riscosAssociados.add(risco);
+        }
+
+        CargosModel cargo = new CargosModel();
+        cargo.setNomeCargo(dadosCargosDTO.getNomeCargo());
+        cargo.setRiscosCargos(riscosAssociados);
+        cargo.setAtivo(true);
+        return cargosRepository.save(cargo);
     }
+
+  // @PostMapping metodo inicial verificar o erro de não associar o risco com o cargo no BD
+  // @Transactional
+  // public CargosModel salvar(@RequestBody DadosCargosDTO dadosCargosDTO){
+  //     List<RiscoModel> codRisco = dadosCargosDTO.getRiscosCargos();
+
+  //     CargosModel cargo = new CargosModel();
+  //     cargo.setNomeCargo(dadosCargosDTO.getNomeCargo());
+  //     cargo.setRiscosCargos(dadosCargosDTO.getRiscosCargos());
+  //     cargo.setAtivo(true);
+  //     return cargosRepository.save(cargo);
+  // }
+
+   //@PostMapping
+   //@Transactional
+   //public void cadastroDeCargo(@RequestBody DadosCargosRecord cargoDTO){
+   //   Long codigosRiscos = cargoDTO.riscoModels().get();
+
+
+   //    cargosRepository.save(new CargosModel(cargoDTO));
+   //    System.out.println(cargoDTO.toString());
+   //}
 
     @GetMapping
     public List<DadosListaCargoDTO> listarCargos(){
@@ -45,11 +91,15 @@ public class CargosController {
         return cargosRepository.findById(id);
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     @Transactional
-    public void atualizarDadosCargos(@RequestBody @Valid AtualizarDadosCargos atualizarDadosCargos){
-        var cargo = cargosRepository.getReferenceById(atualizarDadosCargos.getCodigoCargo());
+    public CargosModel atualizarDadosCargos(@RequestBody @Valid AtualizarDadosCargos atualizarDadosCargos){
+        List<RiscoModel> riscosAssociados = new ArrayList<>();
+        CargosModel cargo = cargosRepository.getReferenceById(atualizarDadosCargos.getCodigoCargo());
+        cargo.setNomeCargo(atualizarDadosCargos.getNomeCargo());
+        cargo.setRiscosCargos(riscosAssociados);
         cargo.atualizarDados(atualizarDadosCargos);
+        return cargosRepository.save(cargo);
     }
 
     @DeleteMapping("/cargo/{id}")

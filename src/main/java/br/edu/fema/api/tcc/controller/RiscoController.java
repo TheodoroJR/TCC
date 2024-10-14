@@ -29,7 +29,6 @@ public class RiscoController {
                                           UriComponentsBuilder componentsBuilder){
         var risco = new RiscoModel(riscoDTO);
         riscoRepository.save(risco);
-        //System.out.println(riscoDTO);
         var uri = componentsBuilder.path("/riscos/{id}").buildAndExpand(risco.getCodigoRisco()).toUri();
         return ResponseEntity.created(uri).body(new DadosListagemRiscoDTO(risco));
     }

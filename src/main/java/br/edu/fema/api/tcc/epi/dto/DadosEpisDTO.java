@@ -52,4 +52,17 @@ public class DadosEpisDTO {
     public int getQtdEstoque() {
         return qtdEstoque;
     }
+
+    @Override
+    public String toString() {
+        return "DadosEpisDTO{" +
+                "nomeEpi='" + nomeEpi + '\'' +
+                ", descricaoEpi='" + descricaoEpi + '\'' +
+                ", numeroCa=" + numeroCa +
+                ", validadeCa='" + validadeCa + '\'' +
+                ", fabricanteEpi='" + fabricanteEpi + '\'' +
+                ", dataDeCadastro='" + dataDeCadastro + '\'' +
+                ", qtdEstoque=" + qtdEstoque +
+                '}';
+    }
 }

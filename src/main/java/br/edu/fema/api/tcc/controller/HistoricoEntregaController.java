@@ -32,7 +32,7 @@ public class HistoricoEntregaController {
     private final HistoricoEntregaRepository historicoEntregaRepository;
 
     public HistoricoEntregaController(EpiRepository epiRepository, ColaboradorRepository colaboradorRepository,
-                                      HistoricoEntregaRepository historicoEntregaRepository){
+                                      HistoricoEntregaRepository historicoEntregaRepository) {
         this.epiRepository = epiRepository;
         this.colaboradorRepository = colaboradorRepository;
         this.historicoEntregaRepository = historicoEntregaRepository;
@@ -40,38 +40,30 @@ public class HistoricoEntregaController {
 
     @GetMapping
     @Transactional
-    public List<HistoricoEntregaModel> listar(){
+    public List<HistoricoEntregaModel> listar() {
         return historicoEntregaRepository.findAll();
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<HistoricoEntregaModel> entregaDeEpi(@RequestBody DadosListHistEntregaDTO dadosListHistEntregaDTO){
-        System.out.println("Entrou no metodo.");
-        // EpiModel epiModel = epiRepository.findById(codigoEpi).orElseThrow(()-> new RuntimeException("EPI NÃO ENCONTRADO"));
-        // ColaboradorModel colaboradorModel = colaboradorRepository.findById(codigoColaborador).orElseThrow(()-> new RuntimeException("COLABORADOR NÃO ENCONTRADO"));
-        // colaboradorModel.getEpis().add(epiModel);
-        System.out.println("Entrega Realizada!");
-
+    public ResponseEntity<HistoricoEntregaModel> entregaDeEpi(@RequestBody DadosListHistEntregaDTO dadosListHistEntregaDTO) {
         HistoricoEntregaModel historicoEntregaModel = new HistoricoEntregaModel(dadosListHistEntregaDTO);
         historicoEntregaRepository.save(historicoEntregaModel);
         Optional<ColaboradorModel> colaboradorOptional = colaboradorRepository.findById(dadosListHistEntregaDTO.getColaboradorId());
-        if(colaboradorOptional.isPresent()){
+        if (colaboradorOptional.isPresent()) {
             ColaboradorModel colaborador = colaboradorOptional.get();
             if (colaborador.getEpis() == null) {
                 colaborador.setListaEpis(new ArrayList<>());
             }
             for (EpiModel epi : dadosListHistEntregaDTO.getEpis()) {
-                colaborador.getEpis().add(epi);}
-           // colaborador.getListaEpis().add((EpiModel) dadosListHistEntregaDTO.getEpis());
+                colaborador.getEpis().add(epi);
+            }
             colaboradorRepository.save(colaborador);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         return ResponseEntity.ok(historicoEntregaModel);
-        //recuperar o colaborador - adicionar o epi novo na lista e salvar o colaborador
     }
 
     //IMPLEMENTAR A CLASSE DTO PARA MONTAR A REQUISIÇÃO NO SWAGGER

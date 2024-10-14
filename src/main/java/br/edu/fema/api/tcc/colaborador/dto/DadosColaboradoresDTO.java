@@ -15,17 +15,16 @@ public class DadosColaboradoresDTO {
     private String telefone;
     private String dataAdmissao;
     private CargosModel cargo;
-    private List<EpiModel> epis;
+
     private Boolean ativo;
 
     public DadosColaboradoresDTO(String nomeColaborador, String cpf, String telefone, String dataAdmissao,
-                                 CargosModel cargo, List<EpiModel> epis) {
+                                 CargosModel cargo) {
         this.nomeColaborador = nomeColaborador;
         this.cpf = cpf;
         this.telefone = telefone;
         this.dataAdmissao = dataAdmissao;
         this.cargo = cargo;
-        this.epis = epis;
         this.ativo = true;
     }
 
@@ -53,9 +52,7 @@ public class DadosColaboradoresDTO {
         return cargo;
     }
 
-    public List<EpiModel> getEpis() {
-        return epis;
-    }
+
 
     @Override
     public String toString() {
@@ -66,7 +63,6 @@ public class DadosColaboradoresDTO {
                 ", telefone='" + telefone + '\'' +
                 ", dataAdmissao='" + dataAdmissao + '\'' +
                 ", cargo=" + cargo +
-                ", epis=" + epis +
                 '}';
     }
 }
